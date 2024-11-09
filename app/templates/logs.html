@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logs</title>
+</head>
+<body>
+    <h1>Query Logs</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Log ID</th>
+                <th>Date</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Query Time</th>
+                <th>User Proxy Response</th>
+                <th>Data Assistant Response</th>
+                <th>Original Poet Response</th>
+                <th>Composer Response</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td>{{ log.log_id }}</td>
+                <td>{{ log.date }}</td>
+                <td>{{ log.start_time }}</td>
+                <td>{{ log.end_time }}</td>
+                <td>{{ log.query_time }}</td>
+                <td>{{ log.user_proxy_response }}</td>
+                <td>{{ log.data_assistant_response }}</td>
+                <td>{{ log.original_poet_response }}</td>
+                <td>{{ log.composer_response }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <br><br>
+    <a href="/">Go Back to Home</a>
+</body>
+</html>
