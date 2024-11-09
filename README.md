@@ -1,6 +1,6 @@
-# MultiAgent Composer
+# MultiAgent Song Composer
 
-MultiAgent Composer is a Python-based AI application that generates original poetry by orchestrating conversations between multiple AI agents, each contributing uniquely to the final composition. The project simulates collaborative creativity by leveraging sequential communication between specialized agents:
+MultiAgent Song Composer is a Python-based AI application that generates original poetry by orchestrating conversations between multiple AI agents, each contributing uniquely to the final composition. The project simulates collaborative creativity by leveraging sequential communication between specialized agents:
 
 - **Data Assistant**: Provides a poem in the style of a specified poet, serving as the stylistic foundation.
 - **Assistant Original Poem**: Writes an original poem in its own unique style, introducing fresh creative elements.
@@ -57,7 +57,7 @@ The application consists of the following components:
 
    ```bash
    git clone https:/github.com/Seraph-Fast/multiagent-SongComposer.git
-   cd multiagent-composer
+   cd multiagent-SongComposer
    ```
 
 2. **Create `app/.env` (for Ollama API) and `app/db.env` (for database connection)**
