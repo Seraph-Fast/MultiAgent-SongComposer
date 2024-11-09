@@ -1,28 +1,34 @@
+import re
+
 def extract_responses(responses):
-    data_assistant_response = ""
-    original_poet_response = ""
-    composer_response = ""
+    data_assistant_response = None
+    original_poet_response = None
+    composer_response = None
 
-    # Helper function to find content by role
-    def find_content_by_name(chat_history, name):
+    for chat_result in responses:
+        chat_history = chat_result.chat_history
+        agent_name = None
+        agent_response = ''
+
         for message in chat_history:
-            if message.get('name') == name and message.get('content'):
-                return message['content']
-        return ""  # Return empty string if content not found
+            if message['role'] == 'user':
+                agent_name = message['name']
+                content = message['content']
+                # Extract content between <BEGIN_POEM> and <END_POEM>
+                match = re.search(r'<BEGIN_POEM>(.*?)<END_POEM>', content, re.DOTALL)
+                if match:
+                    agent_response = match.group(1).strip()
+                else:
+                    agent_response = content.strip()
+                break  
 
-    for result in responses:
-        chat_history = result.chat_history
-        
-        if not data_assistant_response:
-            data_assistant_response = find_content_by_name(chat_history, "data_assistant")
-        
-        if not original_poet_response:
-            original_poet_response = find_content_by_name(chat_history, "assistant_original")
-        
-        if not composer_response:
-            composer_response = find_content_by_name(chat_history, "composer")
+        if agent_name == 'data_assistant':
+            data_assistant_response = agent_response
+        elif agent_name == 'assistant_original':
+            original_poet_response = agent_response
+        elif agent_name == 'composer':
+            composer_response = agent_response
 
-    # Return the extracted responses with default fallbacks
     return {
         "data_assistant_response": data_assistant_response or "No data assistant response found.",
         "original_poet_response": original_poet_response or "No original poet response found.",

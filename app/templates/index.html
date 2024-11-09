@@ -80,11 +80,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>Query Interface</h1>
+        <h1>Original Composer</h1>
         <!-- Form to submit the query -->
         <form id="query-form" action="/generate_poem" method="post">
-            <textarea name="poet" rows="4" placeholder="Enter Poet Name" required></textarea><br>
-            <input type="submit" value="Submit Query" id="submit-button">
+            <textarea name="poet" rows="4" placeholder="Enter Poet Name for his style..." required></textarea><br>
+            <input type="submit" value="Generate Poem" id="submit-button">
         </form>
 
         <!-- Loading animation -->
@@ -96,7 +96,7 @@
         <!-- Result section -->
         <div id="result-container" class="result-container">
             <h2>Generated Poem</h2>
-            <p><strong>Submitted Query:</strong> <span id="user-query"></span></p>
+            <p><strong>Poet Style:</strong> <span id="user-query"></span></p>
             <p><strong>Generated Poem:</strong></p>
             <pre id="poem-result"></pre>
         </div>
