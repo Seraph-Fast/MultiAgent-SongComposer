@@ -58,14 +58,29 @@ The application consists of the following components:
    ```bash
    git clone https://github.com/your-username/multiagent-composer.git
    cd multiagent-composer
+   ```
    
 2. **Create app/.env(for ollama api) and app/db.env(for database connection)**
+   
   examples:
+  
    app/db.env:
+   
    ```makefile
-   POSTGRES_USER=postgres
-  POSTGRES_PASSWORD=1234
-  POSTGRES_DB=db
-  POSTGRES_HOST=database
-  POSTGRES_PORT=5432
-  ```
+    POSTGRES_USER=postgres
+    POSTGRES_PASSWORD=1234
+    POSTGRES_DB=db
+    POSTGRES_HOST=database
+    POSTGRES_PORT=5432
+   ```
+   app/.env:
+
+   ```makefile
+    MODEL_NAME="{model available}"
+    BASE_URL="http://{api_base}:{port}/v1"
+   ```
+3. **Build and Run the Application**
+
+    ```bash
+    docker-compose up --build
+    ```
