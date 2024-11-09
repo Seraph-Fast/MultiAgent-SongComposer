@@ -58,7 +58,7 @@ def initialize_agents(MODEL_NAME, BASE_URL):
 
 def initiate_agents(user_prompt: str):
     # Sequential communication of the agents
-    autogen.runtime_logging.start(config={"dbname": "logs.db"})
+    #autogen.runtime_logging.start(config={"dbname": "logs.db"})
     responses = user_proxy.initiate_chats(
         [
             {
@@ -84,7 +84,7 @@ def initiate_agents(user_prompt: str):
             }
         ]
     )
-    autogen.runtime_logging.stop()
+    #autogen.runtime_logging.stop()
 
     return responses
 

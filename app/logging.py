@@ -3,14 +3,18 @@ import psycopg2
 from psycopg2 import sql
 from datetime import date, time, timedelta
 from typing import List, Dict
+from app.config import DBSettings
+
+
+settings = DBSettings()
 
 # Database connection setup (replace with your actual credentials)
 DB_PARAMS = {
-    'dbname': 'poet_db',
-    'user': 'composer_user',
-    'password': '1234',
-    'host': 'localhost',
-    'port': 5432
+    'dbname': settings.POSTGRES_DB,
+    'user': settings.POSTGRES_USER,
+    'password': settings.POSTGRES_PASSWORD,
+    'host': settings.POSTGRES_HOST,
+    'port': settings.POSTGRES_PORT
 }
 
 def log_interaction(date: date, start_time: time, end_time: time, query_time: timedelta,
