@@ -1,0 +1,6 @@
+psycopg2==2.9.10
+litellm==1.51.3
+fastapi==0.115.4
+uvicorn==0.32.0
+pyautogen==0.3.1
+pydantic-settings==2.6.1
