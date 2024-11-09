@@ -6,7 +6,7 @@ MultiAgent Composer is a Python-based AI application that generates original poe
 - **Assistant Original Poem**: Writes an original poem in its own unique style, introducing fresh creative elements.
 - **Composer Agent**: Synthesizes elements from both poems to produce a new composition that emulates the specified poet's style.
 
-<img src="architectural diagram.png" alt="Project Image" width="400" height="300">
+<img src="architectural diagram.png" alt="Project Image" width="800" height="400">
 
 ---
 
