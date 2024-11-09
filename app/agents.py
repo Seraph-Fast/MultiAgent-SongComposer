@@ -1,7 +1,6 @@
 import autogen
-import os
 
-#global variables for agents
+# Global variables for agents
 data_assistant = None
 assistant_original_poem = None
 assistant_composer = None
@@ -21,29 +20,36 @@ def initialize_agents(MODEL_NAME, BASE_URL):
 
     llm_config = {
         "config_list": config_list,
-        # "cache_seed" : 0,
-        # "temperature": 0,
-        # "timeout": 120,
     }
 
-    # agents
+    # Agents
     data_assistant = autogen.AssistantAgent(
         name="data_assistant",
-        system_message="You are an assistant agent who provides an original poem from the specified poet. Return 'TERMINATE' when the task is done.",
+        system_message=(
+            "You are an assistant agent who provides an original poem from the specified poet. "
+            "Return your poem enclosed in <BEGIN_POEM> and <END_POEM> tags. Return 'TERMINATE' when the task is done."
+        ),
         llm_config=llm_config,
         max_consecutive_auto_reply=1
     )
 
     assistant_original_poem = autogen.AssistantAgent(
         name="assistant_original",
-        system_message="You are an assistant agent who writes an original poem in your own style. Return 'TERMINATE' when the task is done.",
+        system_message=(
+            "You are an assistant agent who writes an original poem in your own style. "
+            "Return your poem enclosed in <BEGIN_POEM> and <END_POEM> tags. Return 'TERMINATE' when the task is done."
+        ),
         llm_config=llm_config,
         max_consecutive_auto_reply=1
     )
 
     assistant_composer = autogen.AssistantAgent(
         name="composer",
-        system_message="You are a composer agent who creates a new composition in the specified poet's style by combining elements from the original and the unique poem. Return 'TERMINATE' when the task is done.",
+        system_message=(
+            "You are a composer agent who creates a new composition in the specified poet's style by combining elements "
+            "from the original and the unique poem. Return your composition enclosed in <BEGIN_POEM> and <END_POEM> tags. "
+            "Return 'TERMINATE' when the task is done."
+        ),
         llm_config=llm_config,
         max_consecutive_auto_reply=1
     )
@@ -58,34 +64,37 @@ def initialize_agents(MODEL_NAME, BASE_URL):
 
 def initiate_agents(user_prompt: str):
     # Sequential communication of the agents
-    autogen.runtime_logging.start(config={"dbname": "logs.db"})
     responses = user_proxy.initiate_chats(
         [
             {
                 "recipient": data_assistant,
-                "message": f"Provide a composition in the style of {user_prompt}. Give Only 2 stanza of the poem",
-                #"clear_history": True,
+                "message": (
+                    f"Provide a original poem of {user_prompt}. Give only 2 stanzas of the poem. "
+                    "Remember to enclose your poem between <BEGIN_POEM> and <END_POEM> tags."
+                ),
+                "clear_history": True,
                 "silent": False,
-                #"summary_method": "reflection_with_llm"
             },
             {
                 "recipient": assistant_original_poem,
-                "message": "Write an original poem in your own style. Give only 2 stanza of original poem",
-                #"clear_history": True,
+                "message": (
+                    "Write an original poem in your own style. Give only 2 stanzas of the original poem. "
+                    "Remember to enclose your poem between <BEGIN_POEM> and <END_POEM> tags."
+                ),
+                "clear_history": True,
                 "silent": False,
-                #"summary_method": "reflection_with_llm"
             },
             {
                 "recipient": assistant_composer,
-                "message": f"Give 2 stanza using the {user_prompt} composition and the original poem, create a new composition in the style of {user_prompt}.",
-                #"clear_history": True,
+                "message": (
+                    f"Using the {user_prompt} composition and the original poem, create a new composition in the style of {user_prompt}. "
+                    "Give 2 stanzas. Remember to enclose your composition between <BEGIN_POEM> and <END_POEM> tags."
+                ),
+                "clear_history": True,
                 "silent": False,
-                #"summary_method": "reflection_with_llm"
             }
         ]
     )
-    autogen.runtime_logging.stop()
-
     return responses
 
 __all__ = ["initialize_agents", "initiate_agents"]

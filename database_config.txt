@@ -1,0 +1,25 @@
+psql -U postgres -h localhost -p 5432
+
+CREATE DATABASE poet_db;
+
+CREATE USER composer_user WITH PASSWORD '1234';
+
+GRANT ALL PRIVILEGES ON DATABASE poet_db TO composer_user;
+
+\c poet_db
+
+CREATE TABLE logs (
+    id SERIAL PRIMARY KEY,
+    date DATE,
+    start_time TIME,
+    end_time TIME,
+    query_time INTERVAL,
+    user_proxy_response TEXT,
+    data_assistant_response TEXT,
+    original_poet_response TEXT,
+    composer_response TEXT
+);
+
+GRANT ALL PRIVILEGES ON TABLE logs TO composer_user;
+
+GRANT USAGE, SELECT ON SEQUENCE logs_id_seq TO composer_user;

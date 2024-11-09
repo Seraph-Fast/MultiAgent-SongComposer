@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Query Interface</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            border: 4px double #000;
+            padding: 20px;
+            text-align: center;
+            background-color: #fff;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 80%;
+            max-width: 500px;
+            padding: 10px;
+        }
+
+        #submit-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+        /* CSS-based loading spinner */
+        .loading {
+            display: none;
+            text-align: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            text-align: left;
+        }
+
+        a {
+            margin-top: 20px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Original Composer</h1>
+        <!-- Form to submit the query -->
+        <form id="query-form" action="/generate_poem" method="post">
+            <textarea name="poet" rows="4" placeholder="Enter Poet Name for his style..." required></textarea><br>
+            <input type="submit" value="Generate Poem" id="submit-button">
+        </form>
+
+        <!-- Loading animation -->
+        <div id="loading" class="loading">
+            <p>Loading...</p>
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Result section -->
+        <div id="result-container" class="result-container">
+            <h2>Generated Poem</h2>
+            <p><strong>Poet Style:</strong> <span id="user-query"></span></p>
+            <p><strong>Generated Poem:</strong></p>
+            <pre id="poem-result"></pre>
+        </div>
+
+        <br>
+        <a href="/logs">View Query Logs</a>
+    </div>
+
+    <script>
+        const form = document.getElementById("query-form");
+        const submitButton = document.getElementById("submit-button");
+        const loading = document.getElementById("loading");
+        const resultContainer = document.getElementById("result-container");
+        const userQueryElement = document.getElementById("user-query");
+        const poemResultElement = document.getElementById("poem-result");
+
+        form.addEventListener("submit", async function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Hide the submit button and show loading
+            submitButton.style.display = "none";
+            loading.style.display = "block";
+
+            // Get the query value
+            const query = form.poet.value;
+
+            try {
+                const response = await fetch('/generate_poem', {
+                    method: 'POST',
+                    body: new URLSearchParams({ poet: query }), // Send the form data
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const result = await response.json(); // Get the response as JSON
+                let poem = result.data_response || "Error generating poem."; // Fallback to error if no result
+
+                // Remove "TERMINATE" if it's at the end of the poem
+                if (poem.endsWith("TERMINATE")) {
+                    poem = poem.slice(0, -9).trim(); // Remove "TERMINATE" and trim any extra spaces
+                }
+
+                // Display the response in the result container
+                userQueryElement.textContent = query;
+                poemResultElement.textContent = poem;
+
+                // Hide loading, show the result, and re-enable the submit button
+                loading.style.display = "none";
+                resultContainer.style.display = "block";
+                submitButton.style.display = "inline-block"; // Show the submit button again
+            } catch (error) {
+                // If there's an error, show the error message
+                loading.style.display = "none";
+                resultContainer.style.display = "block";
+                poemResultElement.textContent = `Error: ${error.message}`;
+                submitButton.style.display = "inline-block"; // Show the submit button again
+            }
+        });
+    </script>
+</body>
+</html>

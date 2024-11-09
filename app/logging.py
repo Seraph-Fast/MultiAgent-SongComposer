@@ -2,14 +2,19 @@
 import psycopg2
 from psycopg2 import sql
 from datetime import date, time, timedelta
+from typing import List, Dict
+from app.config import DBSettings
+
+
+settings = DBSettings()
 
 # Database connection setup (replace with your actual credentials)
 DB_PARAMS = {
-    'dbname': 'poet_db',
-    'user': 'composer_user',
-    'password': '1234',
-    'host': 'localhost',
-    'port': 5432
+    'dbname': settings.POSTGRES_DB,
+    'user': settings.POSTGRES_USER,
+    'password': settings.POSTGRES_PASSWORD,
+    'host': settings.POSTGRES_HOST,
+    'port': settings.POSTGRES_PORT
 }
 
 def log_interaction(date: date, start_time: time, end_time: time, query_time: timedelta,
@@ -55,3 +60,36 @@ def log_interaction(date: date, start_time: time, end_time: time, query_time: ti
     conn.commit()
     cursor.close()
     conn.close()
+
+def get_logs() -> List[Dict]:
+    try:
+        # Connect to the database
+        connection = psycopg2.connect(**DB_PARAMS)
+        cursor = connection.cursor()
+
+        cursor.execute("SELECT * FROM logs ORDER BY date DESC")
+        logs = cursor.fetchall()
+
+        log_data = [
+            {
+                "log_id": log[0],
+                "date": log[1],
+                "start_time": log[2],
+                "end_time": log[3],
+                "query_time": log[4],
+                "user_proxy_response": log[5],
+                "data_assistant_response": log[6],
+                "original_poet_response": log[7],
+                "composer_response": log[8]
+            }
+            for log in logs
+        ]
+
+        # Close the connection
+        cursor.close()
+        connection.close()
+
+        return log_data
+    except Exception as e:
+        print(f"Error fetching logs: {e}")
+        return []
