@@ -56,7 +56,7 @@ The application consists of the following components:
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com//Seraph-Fast//multiagent-SongComposer.git
+   git clone https:/github.com/Seraph-Fast/multiagent-SongComposer.git
    cd multiagent-composer
    ```
 
